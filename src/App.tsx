@@ -1,32 +1,390 @@
-import styled from "styled-components"
+import styled, { ThemeProvider } from "styled-components"
 import Menu from './components/Menu'
 import Navbar from "./components/Navbar"
+import { darkTheme, lightTheme } from "./utils/Theme"
+import {useState} from "react";
+
+
 const Container = styled.div`
 display: flex;
 
 `
 const Main = styled.div`
 flex: 7;
+background-color: ${({theme})=>theme.bg};
+color: ${({theme})=>theme.text};
 `
-const Wrapper = styled.div`
+const Content = styled.div`
 
 `
+
+export enum EMode  {
+  dark = "dark",
+  light = "light"
+}
+
 
 type Props = {}
 
 const App = (props: Props) => {
+  const [mode, setMode] = useState<EMode>(EMode.dark)
   return (
+    <ThemeProvider theme={mode==EMode.dark ? darkTheme : lightTheme}>
+
     <Container>
-      <Menu />
+      <Menu mode={mode} setMode={setMode} />
       <Main>
         <Navbar />
-        <Wrapper>
+        <Content>
 <div>
 Video cards
 </div>
-        </Wrapper>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+<div>
+Video cards
+</div>
+        </Content>
       </Main>
     </Container>
+    </ThemeProvider>
   )
 }
 

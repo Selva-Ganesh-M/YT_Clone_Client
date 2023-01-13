@@ -18,12 +18,13 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
+import { EMode } from '../App';
 
 const MenuContainer = styled.div`
     height: 100vh;
     flex:1;
-    background-color: #202020;
-    color: white;
+    background-color: ${({theme})=>theme.bg};
+    color: ${({theme})=>theme.text};
     position:sticky;
     top: 0;
     overflow-y: scroll;
@@ -60,13 +61,22 @@ const Item = styled.div`
 
 const Hr = styled.hr`
     margin: 5px 0px;
-    border: 0.5px solid #373737;
+    border: ${({theme})=>theme.hrSize} solid ${({theme})=>theme.soft};
 `
 
 const Login = styled.div`
     
 `
-const Button = styled.button`
+
+const Title = styled.h2`
+margin-top: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #aaaaaa;
+    margin-bottom: 20px;
+`
+
+export const Button = styled.button`
     display: flex;
     align-items: center;
     gap: 5px;
@@ -80,10 +90,13 @@ const Button = styled.button`
     cursor:pointer;
 `
 
-type Props = {}
+type Props = {
+    setMode: (value:EMode)=>void, 
+    mode: EMode,
+}
 
 
-const Menu = (props:Props) => {
+const Menu = ({setMode, mode}:Props) => {
     return (
         <MenuContainer>
             <Wrapper>
@@ -94,6 +107,17 @@ const Menu = (props:Props) => {
                 </Logo>
              
             {/* Items List */}
+            <Item onClick={()=>{
+                    if (mode===EMode.dark){
+                        setMode(EMode.light)
+                    }else {
+                        setMode(EMode.dark)
+                    }
+                  }
+                }>
+                    <SettingsBrightnessOutlinedIcon />
+                    {mode===EMode.dark ? "Light Mode": "Dark Mode"}
+                </Item>
                 <Item>
                  <HomeIcon />
                   Home
@@ -125,6 +149,10 @@ const Menu = (props:Props) => {
                     </Button>
                 </Login>
                 <Hr />
+            {/* Title     */}
+            <Title>
+                Best Of YT Clone
+            </Title>
                 <Item>
                   <LibraryMusicOutlinedIcon />
                   Music
