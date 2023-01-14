@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import YTLogo from "../assets/logo.png"
-
+export const LogoImg = YTLogo
+import {Link} from "react-router-dom"
 // Icon Imports
 import HomeIcon from "@mui/icons-material/Home";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
@@ -68,15 +69,15 @@ const Hr = styled.hr`
 `
 
 const Login = styled.div`
-    
+    padding: 5px 0 10px 0;
 `
 
 const Title = styled.h2`
-margin-top: 10px;
+margin-top: 15px;
     font-size: 14px;
     font-weight: 500;
     color: #aaaaaa;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 `
 
 export const Button = styled.button`
@@ -104,10 +105,12 @@ const Menu = ({setMode, mode}:Props) => {
         <MenuContainer>
             <Wrapper>
             {/* Logo */}
+            <Link to="/" style={{textDecoration: "none",color: 'inherit' }}>
                 <Logo>
                 <Img src={YTLogo} alt="YT-clone-logo" />
                 <span>YT Clone</span>
                 </Logo>
+            </Link>
              
             {/* Items List */}
             <Item onClick={()=>{
