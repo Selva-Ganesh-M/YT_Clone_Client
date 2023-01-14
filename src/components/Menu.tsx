@@ -23,18 +23,21 @@ import { EMode } from '../App';
 const MenuContainer = styled.div`
     height: 100vh;
     flex:1;
-    background-color: ${({theme})=>theme.bg};
+    background-color: ${({theme})=>theme.bgLighter};
     color: ${({theme})=>theme.text};
     position:sticky;
     top: 0;
-    overflow-y: scroll;
-    ::-webkit-scrollbar{
-        width: 5px;
-        background-color: #333;
-    };
-    ::-webkit-scrollbar-thumb {
-  background: #777;
-}
+    overflow: hidden;
+    &:hover {
+        overflow-y: scroll;
+        ::-webkit-scrollbar{
+            width: 5px;
+            background-color: #333;
+        };
+        ::-webkit-scrollbar-thumb {
+      background: #777;
+    }
+    }
 `
 
 const Wrapper = styled.div`

@@ -13,13 +13,33 @@ const Wrapper = styled.div`
 height: 100%;
 display: flex;
 align-items: center;
-justify-content:space-between;
+justify-content:flex-end;
+position: relative;
 `;
 const Search = styled.div`
+padding: 0.3em;
+width: 40%;
+margin: auto;
+position: absolute;
+border: 2px solid #333;
+left: 0;
+right: 0;
 display: flex;
 align-items: center;`;
-const Input = styled.input``;
+
+const Input = styled.input`
+background-color: inherit;
+color: ${({theme})=>theme.text};
+flex: 1;
+border: none;
+&:focus {
+    outline: none;
+}
+`;
+
 const Button = styled.button`
+align-self: center;
+margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -41,9 +61,9 @@ const Navbar = (props: Props) => {
         <Wrapper>
             <Search>
                 <Input />
-                <SearchOutlinedIcon />
+                <SearchOutlinedIcon style={{cursor: "pointer"}} />
             </Search>
-            <Button>
+            <Button type="button">
             <AccountCircleOutlinedIcon />
                 Sign In
             </Button>
