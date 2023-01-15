@@ -4,6 +4,7 @@ import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import styled from 'styled-components'
 import Comments from "../components/Comments";
+import Recommendations from "../components/Recommendations";
 
 type Props = {}
 
@@ -16,10 +17,7 @@ color: ${({ theme }) => theme.text};
 const Content = styled.div`
   flex: 5;
 `
-const Recommendation = styled.div`
-  flex: 2;
-  padding: 0 1em;
-`
+
 const VideoWrapper = styled.div`
   background-color: #333;
   border-radius: 10px;
@@ -151,9 +149,7 @@ const Video = (props: Props) => {
         <Hr />
         <Comments />
       </Content>
-      <Recommendation>
-        Recomm
-      </Recommendation>
+      <Recommendations />
     </VideoContainer>
   )
 }
