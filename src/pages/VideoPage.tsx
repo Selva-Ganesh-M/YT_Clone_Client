@@ -3,13 +3,14 @@ import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutl
 import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import styled from 'styled-components'
+import Comments from "../components/Comments";
 
 type Props = {}
 
-const VideoContainer  = styled.div`
-padding:1em;
+const VideoContainer = styled.div`
+padding:2em;
 display: flex;
-color: ${({theme})=>theme.text};
+color: ${({ theme }) => theme.text};
 `
 
 const Content = styled.div`
@@ -32,14 +33,15 @@ const Details = styled.div`
   display: flex;
   justify-content: space-between;
 font-size: 12px;
+align-items: center;
 `
 const Info = styled.div`
-  color: ${({theme})=>theme.textSoft};
+  color: ${({ theme }) => theme.textSoft};
   `
 const Buttons = styled.div`
   display: flex;
   gap: 20px;
-  color: ${({theme})=>theme.textSoft};
+  color: ${({ theme }) => theme.textSoft};
   
 `
 const Button = styled.div`
@@ -50,8 +52,8 @@ cursor: pointer;
 `
 
 const Hr = styled.hr`
-  width: 0.5px;
-  border: 1px solid ${({theme})=>theme.soft};
+  border: 0.5px solid ${({ theme }) => theme.soft};
+  margin: 10px 0;
 `
 
 const ChannelBanner = styled.div`
@@ -87,15 +89,16 @@ const SubscribeButton = styled.button`
   padding: 1em;
   border: none;
   border-radius: 5px;
+  cursor: pointer;
 `
 
 const Description = styled.div`
-  color: ${({theme})=>theme.textSoft};
+  color: ${({ theme }) => theme.textSoft};
   font-size: 12px;
   `
 
 const Subscribers = styled.div`
-color: ${({theme})=>theme.textSoft};
+color: ${({ theme }) => theme.textSoft};
 font-size: 12px;  
 margin-bottom: 10px;
 `
@@ -105,15 +108,15 @@ const Video = (props: Props) => {
     <VideoContainer>
       <Content>
         <VideoWrapper>
-        <iframe
-                    width="100%"
-                    height="500px"
-                    src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
-                    title="YouTube video player"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                  ></iframe>
+          <iframe
+            width="100%"
+            height="500px"
+            src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
         </VideoWrapper>
         <Title>Test Video</Title>
         <Details>
@@ -133,6 +136,7 @@ const Video = (props: Props) => {
             </Button>
           </Buttons>
         </Details>
+        <Hr />
         <ChannelBanner>
           <ChannelImage />
           <ChannelDetails>
@@ -144,9 +148,11 @@ const Video = (props: Props) => {
           </ChannelDetails>
           <SubscribeButton>Subscribe</SubscribeButton>
         </ChannelBanner>
+        <Hr />
+        <Comments />
       </Content>
       <Recommendation>
-Recomm
+        Recomm
       </Recommendation>
     </VideoContainer>
   )
