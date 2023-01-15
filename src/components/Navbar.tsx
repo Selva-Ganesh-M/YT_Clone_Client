@@ -1,13 +1,14 @@
 import styled from "styled-components";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import { Link } from "react-router-dom";
 
 
 const NavbarContainer = styled.div`
 padding: 0 10px;
 position: sticky;
 top: 0;
-background-color: ${({theme})=>theme.bgLighter};
+background-color: ${({ theme }) => theme.bgLighter};
 height: 56px;
 `;
 
@@ -31,7 +32,7 @@ align-items: center;`;
 
 const Input = styled.input`
 background-color: inherit;
-color: ${({theme})=>theme.text};
+color: ${({ theme }) => theme.text};
 flex: 1;
 border: none;
 &:focus {
@@ -58,20 +59,23 @@ margin-bottom: 10px;
 type Props = {}
 
 const Navbar = (props: Props) => {
-  return (
-    <NavbarContainer>
-        <Wrapper>
-            <Search>
-                <Input />
-                <SearchOutlinedIcon style={{cursor: "pointer"}} />
-            </Search>
-            <Button type="button">
-            <AccountCircleOutlinedIcon />
-                Sign In
-            </Button>
-        </Wrapper>
-    </NavbarContainer>
-  )
+    return (
+        <NavbarContainer>
+            <Wrapper>
+                <Search>
+                    <Input />
+                    <SearchOutlinedIcon style={{ cursor: "pointer" }} />
+                </Search>
+                <Link to="/signin" style={{ textDecoration: "none", color: "inherit" }}>
+                    <Button type="button">
+
+                        <AccountCircleOutlinedIcon />
+                        Sign In
+                    </Button>
+                </Link>
+            </Wrapper>
+        </NavbarContainer>
+    )
 }
 
 export default Navbar

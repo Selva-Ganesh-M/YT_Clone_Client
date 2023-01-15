@@ -7,7 +7,7 @@ type Props = {
 }
 
 const CardContainer = styled.div<Props>`
-width: ${({ row }) => !row && "290px"};
+    width: ${({ row }) => !row && "290px"};
     flex-basis: 23%;
     margin: 1px;
     margin-bottom: ${({ row }) => row ? "10px" : "45px"};

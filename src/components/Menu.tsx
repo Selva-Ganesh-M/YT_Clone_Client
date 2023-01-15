@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import YTLogo from "../assets/logo.png"
 export const LogoImg = YTLogo
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 // Icon Imports
 import HomeIcon from "@mui/icons-material/Home";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
@@ -24,8 +24,8 @@ import { EMode } from '../App';
 const MenuContainer = styled.div`
     height: 100vh;
     flex:1;
-    background-color: ${({theme})=>theme.bgLighter};
-    color: ${({theme})=>theme.text};
+    background-color: ${({ theme }) => theme.bgLighter};
+    color: ${({ theme }) => theme.text};
     position:sticky;
     top: 0;
     overflow: hidden;
@@ -42,7 +42,7 @@ const MenuContainer = styled.div`
 `
 
 const Wrapper = styled.div`
-    padding: 18px 26px;
+    padding: 18px 15px;
 `
 
 const Logo = styled.div`
@@ -57,15 +57,18 @@ const Img = styled.img`
 `
 const Item = styled.div`
     display: flex;
-    gap: 20px;
+    gap: 10px;
     align-items: center;
     cursor: pointer;
-    padding: 7.5px 0px;
+    padding: 7.5px 5px;
+    &:hover {
+      background-color: ${({ theme }) => theme.soft}
+    }
 `
 
 const Hr = styled.hr`
     margin: 5px 0px;
-    border: ${({theme})=>theme.hrSize} solid ${({theme})=>theme.soft};
+    border: ${({ theme }) => theme.hrSize} solid ${({ theme }) => theme.soft};
 `
 
 const Login = styled.div`
@@ -95,111 +98,113 @@ export const Button = styled.button`
 `
 
 type Props = {
-    setMode: (value:EMode)=>void, 
-    mode: EMode,
+  setMode: (value: EMode) => void,
+  mode: EMode,
 }
 
 
-const Menu = ({setMode, mode}:Props) => {
-    return (
-        <MenuContainer>
-            <Wrapper>
-            {/* Logo */}
-            <Link to="/" style={{textDecoration: "none",color: 'inherit' }}>
-                <Logo>
-                <Img src={YTLogo} alt="YT-clone-logo" />
-                <span>YT Clone</span>
-                </Logo>
-            </Link>
-             
-            {/* Items List */}
-            <Item onClick={()=>{
-                    if (mode===EMode.dark){
-                        setMode(EMode.light)
-                    }else {
-                        setMode(EMode.dark)
-                    }
-                  }
-                }>
-                    <SettingsBrightnessOutlinedIcon />
-                    {mode===EMode.dark ? "Light Mode": "Dark Mode"}
-                </Item>
-                <Item>
-                 <HomeIcon />
-                  Home
-                </Item>
-                <Item>
-                  <ExploreOutlinedIcon />
-                  Explore
-                </Item>
-                <Item>
-                  <SubscriptionsOutlinedIcon />
-                  Subscriptions
-                </Item>
-                <Hr />
-                <Item>
-                  <VideoLibraryOutlinedIcon />
-                  Library
-                </Item>
-                <Item>
-                  <HistoryOutlinedIcon />
-                  History
-                </Item>
-                <Hr />
-            {/* Login Section */}
-                <Login>
-                    Sign in to like videos, comment, and subscribe
-                    <Button>
-                        <AccountCircleOutlinedIcon />
-                        Sign In
-                    </Button>
-                </Login>
-                <Hr />
-            {/* Title     */}
-            <Title>
-                Best Of YT Clone
-            </Title>
-                <Item>
-                  <LibraryMusicOutlinedIcon />
-                  Music
-                </Item>
-                <Item>
-                  <SportsBasketballOutlinedIcon />
-                  Sports
-                </Item>
-                <Item>
-                  <SportsEsportsOutlinedIcon />
-                  Gaming
-                </Item>
-                <Item>
-                  <MovieOutlinedIcon />
-                  Movies
-                </Item>
-                <Item>
-                  <ArticleOutlinedIcon />
-                  News
-                </Item>
-                <Item>
-                  <LiveTvOutlinedIcon />
-                  Live
-                </Item>
-                <Hr />
+const Menu = ({ setMode, mode }: Props) => {
+  return (
+    <MenuContainer>
+      <Wrapper>
+        {/* Logo */}
+        <Link to="/" style={{ textDecoration: "none", color: 'inherit' }}>
+          <Logo>
+            <Img src={YTLogo} alt="YT-clone-logo" />
+            <span>YT Clone</span>
+          </Logo>
+        </Link>
 
-                <Item>
-                  <SettingsOutlinedIcon />
-                  Settings
-                </Item>
-                <Item>
-                  <FlagOutlinedIcon />
-                  Report
-                </Item>
-                <Item>
-                  <HelpOutlineOutlinedIcon />
-                  Help
-                </Item>
-            </Wrapper>
-        </MenuContainer>
-    )
+        {/* Items List */}
+        <Item onClick={() => {
+          if (mode === EMode.dark) {
+            setMode(EMode.light)
+          } else {
+            setMode(EMode.dark)
+          }
+        }
+        }>
+          <SettingsBrightnessOutlinedIcon />
+          {mode === EMode.dark ? "Light Mode" : "Dark Mode"}
+        </Item>
+        <Item>
+          <HomeIcon />
+          Home
+        </Item>
+        <Item>
+          <ExploreOutlinedIcon />
+          Explore
+        </Item>
+        <Item>
+          <SubscriptionsOutlinedIcon />
+          Subscriptions
+        </Item>
+        <Hr />
+        <Item>
+          <VideoLibraryOutlinedIcon />
+          Library
+        </Item>
+        <Item>
+          <HistoryOutlinedIcon />
+          History
+        </Item>
+        <Hr />
+        {/* Login Section */}
+        <Link to="/signin" style={{ textDecoration: "none", color: "inherit" }}>
+          <Login>
+            Sign in to like videos, comment, and subscribe
+            <Button>
+              <AccountCircleOutlinedIcon />
+              Sign In
+            </Button>
+          </Login>
+        </Link>
+        <Hr />
+        {/* Title     */}
+        <Title>
+          Best Of YT Clone
+        </Title>
+        <Item>
+          <LibraryMusicOutlinedIcon />
+          Music
+        </Item>
+        <Item>
+          <SportsBasketballOutlinedIcon />
+          Sports
+        </Item>
+        <Item>
+          <SportsEsportsOutlinedIcon />
+          Gaming
+        </Item>
+        <Item>
+          <MovieOutlinedIcon />
+          Movies
+        </Item>
+        <Item>
+          <ArticleOutlinedIcon />
+          News
+        </Item>
+        <Item>
+          <LiveTvOutlinedIcon />
+          Live
+        </Item>
+        <Hr />
+
+        <Item>
+          <SettingsOutlinedIcon />
+          Settings
+        </Item>
+        <Item>
+          <FlagOutlinedIcon />
+          Report
+        </Item>
+        <Item>
+          <HelpOutlineOutlinedIcon />
+          Help
+        </Item>
+      </Wrapper>
+    </MenuContainer>
+  )
 }
 
 export default Menu
