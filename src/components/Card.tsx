@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 import { LogoImg } from './Menu'
 import { Link } from "react-router-dom"
-
-type Props = {
-    row?: true;
-}
+import { TPayload, TVideos } from '../pages/HomePage'
+import { useEffect, useState } from 'react'
+import { api } from '../api/api'
+import { format } from 'timeago.js'
 
 const CardContainer = styled.div<Props>`
     width: ${({ row }) => !row && "290px"};
@@ -19,6 +19,7 @@ const CardContainer = styled.div<Props>`
 
 const Image = styled.img<Props>`
     width: 100%;
+    object-fit: cover;
     height: ${({ row }) => row ? "90px" : "150px"};
     background-color: #999;
     border-radius:  10px;
@@ -60,21 +61,48 @@ font-size: 14px;
 color: ${({ theme }) => theme.textSoft};
 `
 
+export type TChannelUser = {
+    _id: string,
+    username: string,
+    email: string,
+    subscribers: number,
+    subscribedUsers: Array<string>,
+    createdAt: Date,
+    updatedAt: Date,
+}
 
-const Card = ({ row }: Props) => {
+type Props = {
+    row?: true;
+    video: TVideos;
+}
+
+const Card = ({ row, video }: Props) => {
+    // declarations
+    const [channelUser, setChannelUser] = useState<TChannelUser>()
+
+    // side-effects
+    useEffect(() => {
+        const getUser = async () => {
+            const response = await api.get<TPayload<TChannelUser>>(`/users/${video.userId}`)
+            if (response.statusText === "OK") {
+                setChannelUser(response.data.payload);
+            }
+        }
+    }, [])
+    // actual response
     return (
         <Link to="/video/test" style={{ textDecoration: "none" }}>
-            <CardContainer row={row}>
-                <Image row={row} />
-                <Details row={row} >
-                    <ChannelImage row={row} />
+            <CardContainer row={row} video={video} >
+                <Image row={row} video={video} src={video.videoUrl} />
+                <Details row={row} video={video} >
+                    <ChannelImage row={row} video={video} src={video.imgUrl} />
                     <Content>
-                        <Title>{"Test video Name Here which is really big".substring(0, 40) + "..."}</Title>
+                        <Title>{video.title.length > 40 ? `${video.title}`.substring(0, 40) + "..." : `${video.title}`}</Title>
                         <ChannelName>
-                            Selva's channel
+                            {channelUser && channelUser.username}
                         </ChannelName>
                         <Info>
-                            123,199 - 1 day ago
+                            {video.views} - {format(video.createdAt)}
                         </Info>
                     </Content>
                 </Details>
