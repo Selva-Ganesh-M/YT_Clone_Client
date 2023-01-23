@@ -1,4 +1,11 @@
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { api } from "../api/api";
+import { TChannelUser } from "../components/Card";
+import { setUser, startSignup } from "../redux/slices/userSlice";
+import { TPayload } from "./HomePage";
 
 const Container = styled.div`
   display: flex;
@@ -62,19 +69,51 @@ const Link = styled.span`
   margin-left: 30px;
 `;
 
+
+// functional component
+
 const SignIn = () => {
+  // grasping stuff
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
+  // declaration
+  const [username, setUsername] = useState<string>("")
+  const [email, setEmail] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+
+  // const functions
+  const handleSignIn = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    // pre
+    e.preventDefault();
+
+    dispatch(startSignup())
+    const response = await api.post<TPayload<TChannelUser>>("/auth/signin", {
+      email, password
+    })
+    if (response.statusText === "OK") {
+      dispatch(setUser(response.data.payload))
+      navigate("/")
+    }
+  }
+
+  // actual rendering
   return (
     <Container>
       <Wrapper>
+        {/* sign in form */}
         <Title>Sign in</Title>
         <SubTitle>to continue to YT Clone</SubTitle>
-        <Input placeholder="username" />
-        <Input type="password" placeholder="password" />
-        <Button>Sign in</Button>
+        <Input placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input type="password" placeholder="password" value={password} onChange={e => setPassword(e.target.value)} />
+        <Button onClick={handleSignIn}>Sign in</Button>
+
+        {/* sign-up form */}
         <Title>or</Title>
-        <Input placeholder="username" />
-        <Input placeholder="email" />
-        <Input type="password" placeholder="password" />
+        <SubTitle>register to YT Clone</SubTitle>
+        <Input placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
+        <Input placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input type="password" placeholder="password" value={password} onChange={e => setPassword(e.target.value)} />
         <Button>Sign up</Button>
       </Wrapper>
       <More>
