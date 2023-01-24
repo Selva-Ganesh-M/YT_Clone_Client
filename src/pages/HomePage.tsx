@@ -7,7 +7,7 @@ import Card from '../components/Card'
 export enum EHomeType {
   random = "random",
   trend = "trend",
-  subscribed = "subscribed",
+  subscribed = "subs",
 }
 
 type Props = {
@@ -54,7 +54,10 @@ const Home = ({ type }: Props) => {
   useEffect(() => {
     // define function
     const fetchHomePageVideos = async (type: EHomeType) => {
-      const res: AxiosResponse<TPayload<Array<TVideos>>> = await api.get(`/videos/${type}`);
+      const res: AxiosResponse<TPayload<Array<TVideos>>> = await api.get(
+        `/videos/${type}`,
+        { withCredentials: true }
+      );
       if (res.statusText === "OK") {
         console.log("res status ok");
         setVideos(res.data.payload)
@@ -63,12 +66,12 @@ const Home = ({ type }: Props) => {
 
     // call function
     fetchHomePageVideos(type)
+
+    return () => {
+      setVideos([])
+    }
   }, [])
 
-  useEffect(() => {
-    console.log("videos: ", videos);
-    console.log("videos.length: ", videos.length);
-  }, [videos])
 
 
   // actual rendering
@@ -76,7 +79,10 @@ const Home = ({ type }: Props) => {
     <HomeContainer>
       <CardsWrapper>
         {
-          videos.length && videos.map(video => <Card video={video} key={video._id} />)
+          videos.length ?
+            videos.map(video => <Card video={video} key={video._id} />)
+            :
+            null
         }
       </CardsWrapper>
     </HomeContainer>

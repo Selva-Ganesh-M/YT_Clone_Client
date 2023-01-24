@@ -1,29 +1,35 @@
 import {createSlice} from "@reduxjs/toolkit"
+import { TChannelUser } from "../../components/Card"
+import { rootState } from "../store"
 
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        user: null,
+        details: undefined as TChannelUser|undefined,
         isLoading: false,
         isError: false
     },
     reducers: {
-        startSignup: (state) => {
+        startSignIn: (state) => {
             state.isLoading=true
         },
         setUser: (state, action) => {
             state.isLoading=false
-            state.user = action.payload
+            state.details = action.payload
         },
         signOut: (state)=>{
-            state.user=null
+            state.details=undefined
             state.isLoading = false;
         }
     }
 })
 
-export const {startSignup, setUser, signOut} = userSlice.actions;
+// selectors
+export const getCurrentUser = (state: rootState)=>state.user
 
+// actions
+export const {startSignIn, setUser, signOut} = userSlice.actions;
+
+// reducer
 const userReducer = userSlice.reducer
-
 export default userReducer;

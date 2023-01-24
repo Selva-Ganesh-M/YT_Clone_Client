@@ -20,7 +20,10 @@ import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import { EMode } from '../App';
+import { useSelector } from "react-redux";
+import { getCurrentUser } from '../redux/slices/userSlice';
 
+// styled components
 const MenuContainer = styled.div`
     height: 100vh;
     flex:1;
@@ -97,13 +100,19 @@ export const Button = styled.button`
     cursor:pointer;
 `
 
+// ts types
 type Props = {
   setMode: (value: EMode) => void,
   mode: EMode,
 }
 
 
+// React functional component
 const Menu = ({ setMode, mode }: Props) => {
+  // declarations
+  const user = useSelector(getCurrentUser)
+
+  // jsx rendering
   return (
     <MenuContainer>
       <Wrapper>
@@ -135,10 +144,13 @@ const Menu = ({ setMode, mode }: Props) => {
           <ExploreOutlinedIcon />
           Explore
         </Item>
-        <Item>
-          <SubscriptionsOutlinedIcon />
-          Subscriptions
-        </Item>
+        {/* subcribed user videos */}
+        <Link to="/subs" style={{ textDecoration: "none", color: "inherit" }}>
+          <Item>
+            <SubscriptionsOutlinedIcon />
+            Subscriptions
+          </Item>
+        </Link>
         <Hr />
         <Item>
           <VideoLibraryOutlinedIcon />
@@ -150,16 +162,21 @@ const Menu = ({ setMode, mode }: Props) => {
         </Item>
         <Hr />
         {/* Login Section */}
-        <Link to="/signin" style={{ textDecoration: "none", color: "inherit" }}>
-          <Login>
-            Sign in to like videos, comment, and subscribe
-            <Button>
-              <AccountCircleOutlinedIcon />
-              Sign In
-            </Button>
-          </Login>
-        </Link>
-        <Hr />
+        {
+          !user.details && (<>
+
+            <Link to="/signin" style={{ textDecoration: "none", color: "inherit" }}>
+              <Login>
+                Sign in to like videos, comment, and subscribe
+                <Button>
+                  <AccountCircleOutlinedIcon />
+                  Sign In
+                </Button>
+              </Login>
+            </Link>
+            <Hr /></>
+          )
+        }
         {/* Title     */}
         <Title>
           Best Of YT Clone

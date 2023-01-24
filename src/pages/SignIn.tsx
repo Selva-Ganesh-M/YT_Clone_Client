@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { api } from "../api/api";
 import { TChannelUser } from "../components/Card";
-import { setUser, startSignup } from "../redux/slices/userSlice";
+import { setUser, startSignIn } from "../redux/slices/userSlice";
 import { TPayload } from "./HomePage";
 
 const Container = styled.div`
@@ -87,13 +87,27 @@ const SignIn = () => {
     // pre
     e.preventDefault();
 
-    dispatch(startSignup())
+    dispatch(startSignIn())
     const response = await api.post<TPayload<TChannelUser>>("/auth/signin", {
       email, password
     })
     if (response.statusText === "OK") {
       dispatch(setUser(response.data.payload))
-      navigate("/")
+      navigate("/subs")
+    }
+  }
+
+  const handleSignUp = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    // pre
+    e.preventDefault();
+
+    dispatch(startSignIn())
+    const response = await api.post<TPayload<TChannelUser>>("/auth/signup", {
+      email, password, username
+    })
+    if (response.statusText === "OK") {
+      dispatch(setUser(response.data.payload))
+      navigate("/subs")
     }
   }
 
