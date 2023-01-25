@@ -9,7 +9,7 @@ import Comments from "../components/Comments";
 import Recommendations from "../components/Recommendations";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../redux/slices/userSlice";
-import { fetchVideoSuccess, getVideo } from "../redux/slices/videoSlice";
+import { dislike, fetchVideoSuccess, getVideo, like } from "../redux/slices/videoSlice";
 import { format } from "timeago.js";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
@@ -142,6 +142,25 @@ const Video = (props: Props) => {
     console.log(currentChannel);
   }, [currentVideo, currentChannel])
 
+  // functions
+  // handle like
+  const handleLike = async () => {
+    api.put(`/videos/like/${currentVideo._id}`)
+      .then((res) => {
+        dispatch(like(user.details!._id))
+      })
+      .catch(err => null)
+  }
+  // handle dislike
+  const handleDislike = async () => {
+    api.put(`/videos/dislike/${currentVideo._id}`)
+      .then((res) => {
+        dispatch(dislike(user.details!._id))
+      })
+      .catch(err => null)
+
+  }
+
   // jsx rendering
   return (
     <VideoContainer>
@@ -160,18 +179,21 @@ const Video = (props: Props) => {
           ></iframe>
         </VideoWrapper>
         <Title>{currentVideo.title}</Title>
+        {/* Video Details */}
         <Details>
           <Info>{currentVideo.views} views • {currentVideo ? format(currentVideo.createdAt) : null}</Info>
           <Buttons>
-            <Button>
+            {/* like btn */}
+            <Button onClick={handleLike}>
               {currentVideo && user && currentVideo.likes?.includes(user.details!._id) ? (
                 <ThumbUpIcon />
               ) : (
                 <ThumbUpOutlinedIcon />
               )} {currentVideo?.likes.length}
             </Button>
-            <Button>
-              {currentVideo && user && currentVideo?.likes?.includes(user.details!._id) ? (
+            {/* dislike btn */}
+            <Button onClick={handleDislike}>
+              {currentVideo && user && currentVideo?.dislikes?.includes(user.details!._id) ? (
                 <ThumbDownIcon />
               ) : (
                 <ThumbDownOffAltOutlinedIcon />
