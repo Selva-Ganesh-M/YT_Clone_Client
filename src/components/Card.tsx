@@ -65,8 +65,10 @@ export type TChannelUser = {
     _id: string,
     username: string,
     email: string,
+    image: string,
     subscribers: number,
     subscribedUsers: Array<string>,
+    isGoogleCreated: Boolean,
     createdAt: Date,
     updatedAt: Date,
 }

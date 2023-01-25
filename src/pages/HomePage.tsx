@@ -54,10 +54,7 @@ const Home = ({ type }: Props) => {
   useEffect(() => {
     // define function
     const fetchHomePageVideos = async (type: EHomeType) => {
-      const res: AxiosResponse<TPayload<Array<TVideos>>> = await api.get(
-        `/videos/${type}`,
-        { withCredentials: true }
-      );
+      const res: AxiosResponse<TPayload<TVideos[]>> = await api.get(`/videos/${type}`);
       if (res.statusText === "OK") {
         console.log("res status ok");
         setVideos(res.data.payload)
@@ -70,7 +67,7 @@ const Home = ({ type }: Props) => {
     return () => {
       setVideos([])
     }
-  }, [])
+  }, [type])
 
 
 
@@ -82,7 +79,7 @@ const Home = ({ type }: Props) => {
           videos.length ?
             videos.map(video => <Card video={video} key={video._id} />)
             :
-            null
+            "No videos found"
         }
       </CardsWrapper>
     </HomeContainer>

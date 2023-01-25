@@ -13,9 +13,12 @@ const userSlice = createSlice({
         startSignIn: (state) => {
             state.isLoading=true
         },
-        setUser: (state, action) => {
+        setUser: (state, action: {payload: TChannelUser, type: string}) => {
             state.isLoading=false
             state.details = action.payload
+        },
+        endSignIn: (state)=>{
+            state.isLoading=true
         },
         signOut: (state)=>{
             state.details=undefined
@@ -28,7 +31,7 @@ const userSlice = createSlice({
 export const getCurrentUser = (state: rootState)=>state.user
 
 // actions
-export const {startSignIn, setUser, signOut} = userSlice.actions;
+export const {startSignIn, setUser, signOut, endSignIn} = userSlice.actions;
 
 // reducer
 const userReducer = userSlice.reducer

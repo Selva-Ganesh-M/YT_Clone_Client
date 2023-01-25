@@ -2,9 +2,11 @@ import styled from "styled-components";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { getCurrentUser } from "../redux/slices/userSlice";
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
+import { signOut } from "../redux/slices/userSlice";
+import { useEffect } from "react";
 
 
 // React styled components
@@ -20,17 +22,14 @@ const Wrapper = styled.div`
 height: 100%;
 display: flex;
 align-items: center;
-justify-content:flex-end;
+justify-content:space-between;
 position: relative;
 `;
 const Search = styled.div`
 padding: 0.3em;
 width: 40%;
 margin: auto;
-position: absolute;
 border: 2px solid #333;
-left: 0;
-right: 0;
 display: flex;
 align-items: center;`;
 
@@ -76,6 +75,15 @@ const Avatar = styled.img`
   background-color: #999;
 `;
 
+const SignOut = styled.button`
+border: none;
+cursor: pointer;
+color: ${({ theme }) => theme.text};
+background-color: inherit;
+font-weight: 500;
+`
+
+
 
 // React functional component
 type Props = {}
@@ -83,31 +91,46 @@ type Props = {}
 const Navbar = (props: Props) => {
     // delcaration
     const user = useSelector(getCurrentUser)
+    const dispatch = useDispatch()
+
+    // functions
+    const handleSignOut = () => {
+        dispatch(signOut())
+    }
+
+    // side-effects 
+    useEffect(() => {
+        console.log("Navbar sideeffect.");
+        console.log(user);
+    }, [user])
 
     // actual rendering
     return (
         <NavbarContainer>
             <Wrapper>
+                <div></div>
                 <Search>
                     <Input />
                     <SearchOutlinedIcon style={{ cursor: "pointer" }} />
                 </Search>
-                <Link to="/signin" style={{ textDecoration: "none", color: "inherit" }}>
-                    {
-                        user.details ? (
-                            <User>
-                                <VideoCallOutlinedIcon />
-                                <Avatar />
+                {
+                    user.details ? (
+                        <User>
+                            <VideoCallOutlinedIcon />
+                            <Avatar referrerPolicy="no-referrer" src={user.details.image} />
+                            <SignOut onClick={handleSignOut}>
                                 {user.details.username}
-                            </User>
-                        ) : (
+                            </SignOut>
+                        </User>
+                    ) : (
+                        <Link to="/signin" style={{ textDecoration: "none", color: "inherit" }}>
                             <Button type="button">
                                 <AccountCircleOutlinedIcon />
                                 Sign In
                             </Button>
-                        )
-                    }
-                </Link>
+                        </Link>
+                    )
+                }
             </Wrapper>
         </NavbarContainer>
     )
