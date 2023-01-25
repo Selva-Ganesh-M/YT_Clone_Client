@@ -93,7 +93,7 @@ const Card = ({ row, video }: Props) => {
     }, [])
     // actual response
     return (
-        <Link to="/video/test" style={{ textDecoration: "none" }}>
+        <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
             <CardContainer row={row} video={video} >
                 <Image row={row} video={video} src={video.videoUrl} />
                 <Details row={row} video={video} >

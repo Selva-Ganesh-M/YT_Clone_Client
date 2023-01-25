@@ -2,9 +2,20 @@ import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutlined";
 import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import styled from 'styled-components'
 import Comments from "../components/Comments";
 import Recommendations from "../components/Recommendations";
+import { useDispatch, useSelector } from "react-redux";
+import { getCurrentUser } from "../redux/slices/userSlice";
+import { fetchVideoSuccess, getVideo } from "../redux/slices/videoSlice";
+import { format } from "timeago.js";
+import { useEffect, useState } from "react";
+import { api } from "../api/api";
+import { useLocation } from "react-router-dom";
+import { TPayload, TVideos } from "./HomePage";
+import { TChannelUser } from "../components/Card";
 
 type Props = {}
 
@@ -102,12 +113,43 @@ margin-bottom: 10px;
 `
 
 const Video = (props: Props) => {
+  // declarations
+  const user = useSelector(getCurrentUser)
+  const dispatch = useDispatch()
+  const location = useLocation()
+
+  // custom declarations
+  const currentVideo = useSelector(getVideo).currVideo
+  const [currentChannel, setCurrentChannel] = useState<TChannelUser>()
+
+  // side-effects
+  useEffect(() => {
+    const fetchData = async () => {
+      const videoRes = await api.get<TPayload<TVideos>>(`/videos/${location.pathname.split("/")[2]}`)
+      const channelRes = await api.get<TPayload<TChannelUser>>(`/users/${videoRes.data.payload.userId}`)
+
+      // dispatchs
+      dispatch(fetchVideoSuccess(videoRes.data.payload))
+      setCurrentChannel(channelRes.data.payload)
+    }
+    fetchData()
+  }, [location])
+
+  useEffect(() => {
+    console.log("location", location.pathname.split("/"));
+
+    console.log(currentVideo);
+    console.log(currentChannel);
+  }, [currentVideo, currentChannel])
+
+  // jsx rendering
   return (
     <VideoContainer>
+      {/* video section + recommendations */}
       <Content>
+        {/* video wrapper */}
         <VideoWrapper>
           <iframe
-
             width="100%"
             height="500px"
             src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
@@ -117,15 +159,23 @@ const Video = (props: Props) => {
             allowFullScreen
           ></iframe>
         </VideoWrapper>
-        <Title>Test Video</Title>
+        <Title>{currentVideo.title}</Title>
         <Details>
-          <Info>7,948,154 views • Jun 22, 2022</Info>
+          <Info>{currentVideo.views} views • {currentVideo ? format(currentVideo.createdAt) : null}</Info>
           <Buttons>
             <Button>
-              <ThumbUpOutlinedIcon /> 123
+              {currentVideo && user && currentVideo.likes?.includes(user.details!._id) ? (
+                <ThumbUpIcon />
+              ) : (
+                <ThumbUpOutlinedIcon />
+              )} {currentVideo?.likes.length}
             </Button>
             <Button>
-              <ThumbDownOffAltOutlinedIcon /> Dislike
+              {currentVideo && user && currentVideo?.likes?.includes(user.details!._id) ? (
+                <ThumbDownIcon />
+              ) : (
+                <ThumbDownOffAltOutlinedIcon />
+              )}
             </Button>
             <Button>
               <ReplyOutlinedIcon /> Share
@@ -136,19 +186,21 @@ const Video = (props: Props) => {
           </Buttons>
         </Details>
         <Hr />
+
+        {/* Channel Banner */}
         <ChannelBanner>
-          <ChannelImage />
+          <ChannelImage src={currentChannel?.image} alt="missing imagee" />
           <ChannelDetails>
-            <ChannelTitle>Selva Dev</ChannelTitle>
+            <ChannelTitle>{currentChannel?.username}</ChannelTitle>
             <Subscribers>
-              25k subscribers
+              {currentChannel?.subscribers}
             </Subscribers>
-            <Description>This is a full stack web dev channel. Please subscribe to encourage.</Description>
+            <Description>{currentVideo.desc}</Description>
           </ChannelDetails>
           <SubscribeButton>Subscribe</SubscribeButton>
         </ChannelBanner>
         <Hr />
-        <Comments />
+        {/* <Comments /> */}
       </Content>
       <Recommendations />
     </VideoContainer>

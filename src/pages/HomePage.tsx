@@ -30,6 +30,7 @@ const CardsWrapper = styled.div`
 export type TVideos = {
   _id: string,
   title: string,
+  desc: string,
   userId: string,
   imgUrl: string,
   videoUrl: string,
@@ -60,7 +61,6 @@ const Home = ({ type }: Props) => {
         setVideos(res.data.payload)
       }
     }
-
     // call function
     fetchHomePageVideos(type)
 

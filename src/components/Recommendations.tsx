@@ -10,23 +10,7 @@ const RecommContainer = styled.div`
 
 const Recommendations = (props: Props) => {
     return <RecommContainer>
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
-        <Card row={true} />
+
     </RecommContainer>
 
 }
