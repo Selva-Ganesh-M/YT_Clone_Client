@@ -10,6 +10,7 @@ const userSlice = createSlice({
         isError: false
     },
     reducers: {
+        // overall update
         startSignIn: (state) => {
             state.isLoading=true
         },
@@ -23,6 +24,17 @@ const userSlice = createSlice({
         signOut: (state)=>{
             state.details=undefined
             state.isLoading = false;
+        },
+        subs: (state, action:{type: string, payload: string})=>{
+            // if subscribed, un-subscribe
+            if (state.details?.subscribedUsers.includes(action.payload)){
+                state.details.subscribedUsers.splice(
+                    state.details.subscribedUsers.indexOf(action.payload), 1
+                )
+            }else {
+                // else subscribe
+                state.details?.subscribedUsers.push(action.payload)
+            }
         }
     }
 })
@@ -31,7 +43,7 @@ const userSlice = createSlice({
 export const getCurrentUser = (state: rootState)=>state.user
 
 // actions
-export const {startSignIn, setUser, signOut, endSignIn} = userSlice.actions;
+export const {startSignIn, setUser, signOut, endSignIn, subs} = userSlice.actions;
 
 // reducer
 const userReducer = userSlice.reducer

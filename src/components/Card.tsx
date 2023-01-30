@@ -5,6 +5,7 @@ import { TPayload, TVideos } from '../pages/HomePage'
 import { useEffect, useState } from 'react'
 import { api } from '../api/api'
 import { format } from 'timeago.js'
+import { useDispatch } from 'react-redux'
 
 const CardContainer = styled.div<Props>`
     width: ${({ row }) => !row && "290px"};
@@ -80,9 +81,13 @@ type Props = {
 
 const Card = ({ row, video }: Props) => {
     // declarations
+    const dispatch = useDispatch();
+
+    // custom declarations
     const [channelUser, setChannelUser] = useState<TChannelUser>()
 
     // side-effects
+    // fetch user
     useEffect(() => {
         const getUser = async () => {
             const response = await api.get<TPayload<TChannelUser>>(`/users/${video.userId}`)
@@ -91,6 +96,8 @@ const Card = ({ row, video }: Props) => {
             }
         }
     }, [])
+
+
     // actual response
     return (
         <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>

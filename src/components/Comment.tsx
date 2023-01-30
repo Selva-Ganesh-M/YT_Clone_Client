@@ -1,12 +1,44 @@
-import React from 'react'
-import styled from 'styled-components'
+import { async } from '@firebase/util'
+import React, { useState, useEffect } from 'react'
+import styled, { ThemeConsumer } from 'styled-components'
+import { format } from 'timeago.js'
+import { api } from '../api/api'
+import { TPayload } from '../pages/HomePage'
+import { TChannelUser } from './Card'
 
-type Props = {}
+export type TComment = {
+    _id: string,
+    userId: string,
+    videoId: string,
+    content: string,
+    createdAT: Date,
+    updatedAT: Date
+}
 
+type Props = {
+    comment: TComment
+}
+
+// #region - styled components
 const CommentContainer = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
+    justify-content: space-between;
+`
+
+const LeftSide = styled.div`
+    display: flex;
+    gap: 10px;
+`
+
+const RightSide = styled.div``
+
+const DeleteButton = styled.button`
+    background-color: #333;
+    padding: 0.5em 1em;
+    border-radius: 0.25em;
+    color: ${({ theme }) => theme.text};
 `
 
 const Image = styled.img`
@@ -20,6 +52,10 @@ const Content = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
+`
+
+const deleteComment = styled.div`
+    background-color: transparent;
 `
 
 const NameAndTime = styled.div`
@@ -42,24 +78,68 @@ const Message = styled.div`
 color: ${({ theme }) => theme.text};
 font-size: 14px;
 `
+//#endregion
 
-const Comment = (props: Props) => {
+const Comment = ({ comment }: Props) => {
+    //#region : declarations
+
+    //#endregion
+
+    //#region : custom-declarations
+    const [commentor, setCommentor] = useState<TChannelUser>()
+
+    //#endregion
+
+    //#region : side-effects
+    // fetch commentor
+    useEffect(() => {
+        if (comment) {
+            (async () => {
+                const res = await api.get<TPayload<TChannelUser>>(`/users/${comment.userId}`)
+                if (res.statusText === "OK") {
+                    setCommentor(res.data.payload)
+                } else {
+                    console.log("fetch commentor failed");
+                }
+            })()
+        }
+
+        return () => {
+            setCommentor(undefined)
+        }
+    }, [comment])
+
+
+    //#endregion
+
+    //#region : functions
+
+    //#endregion
+
+    //jsx rendering
     return (
         <CommentContainer>
-            <Image />
-            <Content>
-                <NameAndTime>
-                    <Name>
-                        Selva
-                    </Name>
-                    <Time>
-                        1 hour ago
-                    </Time>
-                </NameAndTime>
-                <Message>
-                    This is the comment.
-                </Message>
-            </Content>
+            <LeftSide>
+                <Image src={commentor?.image} alt="no" />
+                <Content>
+                    <NameAndTime>
+                        <Name>
+                            {commentor?.username}
+                        </Name>
+                        <Time>
+                            {comment && format(comment.createdAT)}
+                        </Time>
+                    </NameAndTime>
+                    <Message>
+                        {comment?.content}
+                    </Message>
+                </Content>
+            </LeftSide>
+            <RightSide>
+                <DeleteButton>
+                    delete
+                </DeleteButton>
+            </RightSide>
         </CommentContainer>
     )
 }

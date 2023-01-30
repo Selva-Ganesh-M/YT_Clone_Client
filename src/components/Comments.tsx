@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Navigate, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import Comment from './Comment'
+import { api } from '../api/api'
+import { TPayload } from '../pages/HomePage'
+import { addComment, getComments, removeComments, setComments } from '../redux/slices/commentSlice'
+import { getCurrentUser } from '../redux/slices/userSlice'
+import { getVideo } from '../redux/slices/videoSlice'
+import Comment, { TComment } from './Comment'
 
-type Props = {}
+
+// #region : styled-components
 
 const CommentsContainer = styled.div`
 margin: 10px 0;
@@ -34,32 +42,73 @@ color: ${({ theme }) => theme.text};
     color: #777;
     font-size: 12px;
 };
+// #endregion
 `
 
-const Comments = (props: Props) => {
+type Props = {}
+
+const Comments = ({ }: Props) => {
+    //#region : declarations
+    const currentVideo = useSelector(getVideo).currVideo
+    const comments = useSelector(getComments)
+    const dispatch = useDispatch()
+    const currentUser = useSelector(getCurrentUser).details
+    const navigate = useNavigate()
+    //#endregion
+
+    //#region : custom-declarations
+    const [content, setContent] = useState<string>("")
+    //#endregion
+
+    //#region : side-effects
+    // fetch comments
+    useEffect(() => {
+        (async () => {
+            console.log("fetching comments");
+
+            const res = await api.get<TPayload<TComment[]>>(`/comments/${currentVideo._id}`)
+            if (res.statusText === "OK") {
+                dispatch(setComments(res.data.payload))
+            } else {
+                console.log("comments fetching failed.");
+            }
+        })()
+
+        return () => {
+            dispatch(removeComments)
+        }
+    }, [currentVideo])
+
+    //#endregion
+
+    //#region : functions
+    // add new comment
+    const handleNewComment = async () => {
+        // if no user re-direct to signin page
+        if (!currentUser) navigate("/signin")
+        const res = await api.post<TPayload<TComment>>(`/comments/${currentVideo._id}`, { content })
+        if (res.data.status === "success") {
+            dispatch(addComment(res.data.payload))
+            setContent("")
+        }
+    }
+
+    //#endregion
+
+    //jsx rendering
     return (
         <CommentsContainer>
             <NewComment>
-                <Image />
-                <Input placeholder='add new comment here...' />
+                <Image src={currentUser?.image} />
+                <Input value={content} onChange={(e) => setContent(e.target.value)} placeholder='add new comment here...' />
+                <button onClick={handleNewComment}>Comment</button>
             </NewComment>
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
+            {
+                comments.map(comment => (
+                    <Comment key={comment._id} comment={comment} />
+                ))
+            }
+
         </CommentsContainer>
     )
 }

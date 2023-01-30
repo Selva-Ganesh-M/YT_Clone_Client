@@ -10,6 +10,7 @@ const videoSlice = createSlice({
         isError: false,
     },
     reducers: {
+        // fetch ops
         fetchVideoStart : (state)=>{
             state.isLoading = true
         },
@@ -21,6 +22,7 @@ const videoSlice = createSlice({
             state.isLoading= false,
             state.isError = true
         },
+        // like
         like: (state, action:{type:string, payload:string})=>{
             // adding new id to likes without creating duplicates
             if (!state.currVideo.likes.includes(action.payload)){
@@ -30,19 +32,20 @@ const videoSlice = createSlice({
             state.currVideo.dislikes.splice(
                 state.currVideo.dislikes.indexOf(action.payload),
                 1
-                )
-            },
-            dislike: (state, action:{type:string, payload:string})=>{
-                // adding new id without creating duplicates
-                if (!state.currVideo.dislikes.includes(action.payload)){
-                    state.currVideo.dislikes.push(action.payload)
-                }
-                // removing id from likes
-            state.currVideo.likes.splice(
-                state.currVideo.likes.indexOf(action.payload),
-                1
             )
-        }
+        },
+        // dislike
+        dislike: (state, action:{type:string, payload:string})=>{
+            // adding new id without creating duplicates
+            if (!state.currVideo.dislikes.includes(action.payload)){
+                state.currVideo.dislikes.push(action.payload)
+            }
+            // removing id from likes
+        state.currVideo.likes.splice(
+            state.currVideo.likes.indexOf(action.payload),
+            1
+        )
+        },
     }
 })
 

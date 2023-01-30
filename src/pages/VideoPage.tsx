@@ -8,17 +8,20 @@ import styled from 'styled-components'
 import Comments from "../components/Comments";
 import Recommendations from "../components/Recommendations";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser } from "../redux/slices/userSlice";
+import { getCurrentUser, subs } from "../redux/slices/userSlice";
 import { dislike, fetchVideoSuccess, getVideo, like } from "../redux/slices/videoSlice";
 import { format } from "timeago.js";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { TPayload, TVideos } from "./HomePage";
 import { TChannelUser } from "../components/Card";
 
-type Props = {}
+type Props = {
 
+}
+
+//#region - styled components
 const VideoContainer = styled.div`
 padding:2em;
 display: flex;
@@ -92,9 +95,9 @@ margin-top: 20px;
   margin-bottom: 5px;
 `
 
-const SubscribeButton = styled.button`
+const SubscribeButton = styled.button<{ isSubscribed: Boolean | undefined }>`
   color: white;
-  background-color: red;
+  background-color: ${({ isSubscribed }) => isSubscribed ? `#555` : `red`};
   padding: 1em;
   border: none;
   border-radius: 5px;
@@ -111,18 +114,23 @@ color: ${({ theme }) => theme.textSoft};
 font-size: 12px;  
 margin-bottom: 10px;
 `
+//#endregion
 
+
+// React functional component
 const Video = (props: Props) => {
   // declarations
   const user = useSelector(getCurrentUser)
   const dispatch = useDispatch()
   const location = useLocation()
+  const navigate = useNavigate()
 
   // custom declarations
   const currentVideo = useSelector(getVideo).currVideo
   const [currentChannel, setCurrentChannel] = useState<TChannelUser>()
 
-  // side-effects
+  //#region : side-effects
+  // fetch video and channel
   useEffect(() => {
     const fetchData = async () => {
       const videoRes = await api.get<TPayload<TVideos>>(`/videos/${location.pathname.split("/")[2]}`)
@@ -131,18 +139,23 @@ const Video = (props: Props) => {
       // dispatchs
       dispatch(fetchVideoSuccess(videoRes.data.payload))
       setCurrentChannel(channelRes.data.payload)
+      console.log("set current channel ran.");
+      console.log("channelRes.payload", channelRes.data);
+      console.log("currentChannel:", currentChannel);
+
+
     }
     fetchData()
   }, [location])
 
+
   useEffect(() => {
-    console.log("location", location.pathname.split("/"));
+    console.log(currentChannel && user.details?.subscribedUsers.includes(currentChannel._id));
+  }, [user])
 
-    console.log(currentVideo);
-    console.log(currentChannel);
-  }, [currentVideo, currentChannel])
+  //#endregion
 
-  // functions
+  //#region - functions
   // handle like
   const handleLike = async () => {
     api.put(`/videos/like/${currentVideo._id}`)
@@ -160,6 +173,14 @@ const Video = (props: Props) => {
       .catch(err => null)
 
   }
+  // handle subscription
+  const handleSubs = async () => {
+    (user.details?.subscribedUsers.includes(currentChannel?._id!)) ?
+      await api.patch(`/users/unsubscribe/${currentChannel?._id}`) :
+      await api.patch(`/users/subscribe/${currentChannel?._id}`)
+    dispatch(subs(currentChannel?._id!))
+  }
+  //#endregion
 
   // jsx rendering
   return (
@@ -182,30 +203,55 @@ const Video = (props: Props) => {
         {/* Video Details */}
         <Details>
           <Info>{currentVideo.views} views • {currentVideo ? format(currentVideo.createdAt) : null}</Info>
-          <Buttons>
-            {/* like btn */}
-            <Button onClick={handleLike}>
-              {currentVideo && user && currentVideo.likes?.includes(user.details!._id) ? (
-                <ThumbUpIcon />
-              ) : (
+          {/* conditional routing acc to user presence */}
+          {user.details ? (
+            <Buttons>
+              {/* like btn */}
+              <Button onClick={handleLike}>
+                {/* if user have conditions */}
+                {/* if no user just show the subscribe button and redirect user to signup page */}
+                {currentVideo.likes.includes(user.details!._id) ? (
+                  <ThumbUpIcon />
+                ) : (
+                  <ThumbUpOutlinedIcon />
+                )} {currentVideo?.likes.length}
+              </Button>
+
+              {/* dislike btn */}
+              <Button onClick={handleDislike}>
+                {currentVideo.dislikes.includes(user.details!._id) ? (
+                  <ThumbDownIcon />
+                ) : (
+                  <ThumbDownOffAltOutlinedIcon />
+                )}
+              </Button>
+              <Button>
+                <ReplyOutlinedIcon /> Share
+              </Button>
+              <Button>
+                <AddTaskOutlinedIcon /> Save
+              </Button>
+            </Buttons>
+          ) : (
+            <Buttons onClick={() => navigate("/signin")}>
+              {/* like btn */}
+              <Button>
                 <ThumbUpOutlinedIcon />
-              )} {currentVideo?.likes.length}
-            </Button>
-            {/* dislike btn */}
-            <Button onClick={handleDislike}>
-              {currentVideo && user && currentVideo?.dislikes?.includes(user.details!._id) ? (
-                <ThumbDownIcon />
-              ) : (
+              </Button>
+
+              {/* dislike btn */}
+              <Button>
                 <ThumbDownOffAltOutlinedIcon />
-              )}
-            </Button>
-            <Button>
-              <ReplyOutlinedIcon /> Share
-            </Button>
-            <Button>
-              <AddTaskOutlinedIcon /> Save
-            </Button>
-          </Buttons>
+              </Button>
+              <Button>
+                <ReplyOutlinedIcon /> Share
+              </Button>
+              <Button>
+                <AddTaskOutlinedIcon /> Save
+              </Button>
+            </Buttons>
+          )}
+
         </Details>
         <Hr />
 
@@ -219,10 +265,28 @@ const Video = (props: Props) => {
             </Subscribers>
             <Description>{currentVideo.desc}</Description>
           </ChannelDetails>
-          <SubscribeButton>Subscribe</SubscribeButton>
+          {/* subs btn */}
+          {
+            // conditional rendering acc to user presence
+            !user.details ? (
+              <SubscribeButton isSubscribed={false} onClick={() => navigate('/signin')}>
+                Subscribe
+              </SubscribeButton>
+            ) : (
+              <SubscribeButton isSubscribed={user.details?.subscribedUsers.includes(currentChannel?._id!)} onClick={handleSubs}>
+                {
+                  user.details?.subscribedUsers.includes(currentChannel?._id!) ? (
+                    "Subscribed"
+                  ) : (
+                    "Subscribe"
+                  )
+                }
+              </SubscribeButton>
+            )
+          }
         </ChannelBanner>
         <Hr />
-        {/* <Comments /> */}
+        <Comments />
       </Content>
       <Recommendations />
     </VideoContainer>

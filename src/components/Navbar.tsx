@@ -99,10 +99,6 @@ const Navbar = (props: Props) => {
     }
 
     // side-effects 
-    useEffect(() => {
-        console.log("Navbar sideeffect.");
-        console.log(user);
-    }, [user])
 
     // actual rendering
     return (

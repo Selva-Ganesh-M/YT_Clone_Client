@@ -12,6 +12,7 @@ import {
     REGISTER,
   } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
+import commentsReducer from "./slices/commentSlice";
 
 
 
@@ -24,6 +25,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
     user: userReducer,
     video: videoReducer,
+    comments: commentsReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
