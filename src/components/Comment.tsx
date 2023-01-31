@@ -1,10 +1,13 @@
 import { async } from '@firebase/util'
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled, { ThemeConsumer } from 'styled-components'
 import { format } from 'timeago.js'
 import { api } from '../api/api'
 import { TPayload } from '../pages/HomePage'
 import { TChannelUser } from './Card'
+import { deleteComment as deleteCommentReducer } from '../redux/slices/commentSlice'
+import { getCurrentUser } from '../redux/slices/userSlice'
 
 export type TComment = {
     _id: string,
@@ -26,13 +29,29 @@ const CommentContainer = styled.div`
     gap: 10px;
     justify-content: space-between;
 `
+const Input = styled.input`
+border: none;
+border-bottom: 1px solid ${({ theme }) => theme.soft};
+outline: none;
+background: transparent;
+width: 100%;
+color: ${({ theme }) => theme.text};
+&::placeholder {
+    color: #777;
+    font-size: 12px;
+};
+`
 
 const LeftSide = styled.div`
     display: flex;
     gap: 10px;
+    /* flex-grow:1; */
+    width: 100%;
 `
 
-const RightSide = styled.div``
+const RightSide = styled.div`
+    display: flex;
+`
 
 const DeleteButton = styled.button`
     background-color: #333;
@@ -78,16 +97,20 @@ const Message = styled.div`
 color: ${({ theme }) => theme.text};
 font-size: 14px;
 `
+
+const EditButton = DeleteButton
 //#endregion
 
 const Comment = ({ comment }: Props) => {
     //#region : declarations
-
+    const dispatch = useDispatch()
+    const user = useSelector(getCurrentUser).details
     //#endregion
 
     //#region : custom-declarations
     const [commentor, setCommentor] = useState<TChannelUser>()
-
+    const [content, setContent] = useState<string>(comment.content)
+    const [isEditing, setIsEditing] = useState<Boolean>(false)
     //#endregion
 
     //#region : side-effects
@@ -113,7 +136,13 @@ const Comment = ({ comment }: Props) => {
     //#endregion
 
     //#region : functions
-
+    // delete comment function
+    const handleDeleteComment = async () => {
+        const res = await api.delete(`/comments/${comment._id}`)
+        if (res.statusText === "OK") {
+            dispatch(deleteCommentReducer({ id: comment._id }))
+        }
+    }
     //#endregion
 
     //jsx rendering
@@ -130,16 +159,33 @@ const Comment = ({ comment }: Props) => {
                             {comment && format(comment.createdAT)}
                         </Time>
                     </NameAndTime>
-                    <Message>
-                        {comment?.content}
-                    </Message>
+                    {/* edit input box || comment content */}
+                    {
+                        isEditing ? (
+                            <Input value={content} onChange={(e) => setContent(e.target.value)} placeholder='edit comment here...'>
+
+                            </Input>
+                        ) : (
+                            <Message>
+                                {content}
+                            </Message>
+                        )
+                    }
                 </Content>
             </LeftSide>
-            <RightSide>
-                <DeleteButton>
-                    delete
-                </DeleteButton>
-            </RightSide>
+            {/* show this side only if the user is the owner of this comment */}
+            {
+                user && comment.userId === user._id && (
+                    <RightSide>
+                        <EditButton onClick={() => setIsEditing(prev => !prev)} >
+                            Edit
+                        </EditButton>
+                        <DeleteButton onClick={handleDeleteComment}>
+                            delete
+                        </DeleteButton>
+                    </RightSide>
+                )
+            }
         </CommentContainer>
     )
 }

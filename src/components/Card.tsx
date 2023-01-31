@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { api } from '../api/api'
 import { format } from 'timeago.js'
 import { useDispatch } from 'react-redux'
+import { viewVideo } from '../redux/slices/videoSlice'
 
 const CardContainer = styled.div<Props>`
     width: ${({ row }) => !row && "290px"};
@@ -86,6 +87,8 @@ const Card = ({ row, video }: Props) => {
     // custom declarations
     const [channelUser, setChannelUser] = useState<TChannelUser>()
 
+    // functions
+
     // side-effects
     // fetch user
     useEffect(() => {
@@ -96,7 +99,6 @@ const Card = ({ row, video }: Props) => {
             }
         }
     }, [])
-
 
     // actual response
     return (

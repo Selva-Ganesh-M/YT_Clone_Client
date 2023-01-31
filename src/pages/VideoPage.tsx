@@ -9,7 +9,7 @@ import Comments from "../components/Comments";
 import Recommendations from "../components/Recommendations";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser, subs } from "../redux/slices/userSlice";
-import { dislike, fetchVideoSuccess, getVideo, like } from "../redux/slices/videoSlice";
+import { dislike, fetchVideoSuccess, getVideo, like, viewVideo } from "../redux/slices/videoSlice";
 import { format } from "timeago.js";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
@@ -129,31 +129,6 @@ const Video = (props: Props) => {
   const currentVideo = useSelector(getVideo).currVideo
   const [currentChannel, setCurrentChannel] = useState<TChannelUser>()
 
-  //#region : side-effects
-  // fetch video and channel
-  useEffect(() => {
-    const fetchData = async () => {
-      const videoRes = await api.get<TPayload<TVideos>>(`/videos/${location.pathname.split("/")[2]}`)
-      const channelRes = await api.get<TPayload<TChannelUser>>(`/users/${videoRes.data.payload.userId}`)
-
-      // dispatchs
-      dispatch(fetchVideoSuccess(videoRes.data.payload))
-      setCurrentChannel(channelRes.data.payload)
-      console.log("set current channel ran.");
-      console.log("channelRes.payload", channelRes.data);
-      console.log("currentChannel:", currentChannel);
-
-
-    }
-    fetchData()
-  }, [location])
-
-
-  useEffect(() => {
-    console.log(currentChannel && user.details?.subscribedUsers.includes(currentChannel._id));
-  }, [user])
-
-  //#endregion
 
   //#region - functions
   // handle like
@@ -171,8 +146,8 @@ const Video = (props: Props) => {
         dispatch(dislike(user.details!._id))
       })
       .catch(err => null)
-
   }
+
   // handle subscription
   const handleSubs = async () => {
     (user.details?.subscribedUsers.includes(currentChannel?._id!)) ?
@@ -180,7 +155,40 @@ const Video = (props: Props) => {
       await api.patch(`/users/subscribe/${currentChannel?._id}`)
     dispatch(subs(currentChannel?._id!))
   }
+
   //#endregion
+
+  //#region : side-effects
+  // fetch video and channel
+  useEffect(() => {
+    const fetchData = async () => {
+      const videoRes = await api.get<TPayload<TVideos>>(`/videos/${location.pathname.split("/")[2]}`)
+      const channelRes = await api.get<TPayload<TChannelUser>>(`/users/${videoRes.data.payload.userId}`)
+
+      // dispatchs
+      dispatch(fetchVideoSuccess(videoRes.data.payload))
+      setCurrentChannel(channelRes.data.payload)
+      console.log("set current channel ran.");
+      console.log("channelRes.payload", channelRes.data);
+      console.log("currentChannel:", currentChannel);
+    }
+    fetchData()
+  }, [location])
+
+  // view increase
+  useEffect(() => {
+    (async () => {
+      console.log("working on view video");
+
+      const res = await api.post(`/videos/view/${currentVideo._id}`)
+      if (res.statusText === "OK") {
+        dispatch(viewVideo)
+      }
+    })()
+  }, [])
+
+  //#endregion
+
 
   // jsx rendering
   return (

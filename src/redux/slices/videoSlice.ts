@@ -41,16 +41,19 @@ const videoSlice = createSlice({
                 state.currVideo.dislikes.push(action.payload)
             }
             // removing id from likes
-        state.currVideo.likes.splice(
+            state.currVideo.likes.splice(
             state.currVideo.likes.indexOf(action.payload),
             1
         )
         },
+        viewVideo: (state, action)=>{
+            state.currVideo.views ++
+        }
     }
 })
 
 // export actions
-export const {fetchVideoFailed, fetchVideoStart, fetchVideoSuccess, like, dislike} = videoSlice.actions
+export const {fetchVideoFailed, fetchVideoStart, fetchVideoSuccess, like, dislike, viewVideo} = videoSlice.actions
 
 // export selectors
 export const getVideo = (state: rootState)=>state.video

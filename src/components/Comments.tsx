@@ -98,10 +98,10 @@ const Comments = ({ }: Props) => {
     //jsx rendering
     return (
         <CommentsContainer>
-            <NewComment>
+            <NewComment >
                 <Image src={currentUser?.image} />
                 <Input value={content} onChange={(e) => setContent(e.target.value)} placeholder='add new comment here...' />
-                <button onClick={handleNewComment}>Comment</button>
+                <button type="submit" onClick={handleNewComment}>Comment</button>
             </NewComment>
             {
                 comments.map(comment => (
