@@ -6,7 +6,7 @@ import { format } from 'timeago.js'
 import { api } from '../api/api'
 import { TPayload } from '../pages/HomePage'
 import { TChannelUser } from './Card'
-import { deleteComment as deleteCommentReducer } from '../redux/slices/commentSlice'
+import { deleteComment as deleteCommentReducer, updateComment } from '../redux/slices/commentSlice'
 import { getCurrentUser } from '../redux/slices/userSlice'
 
 export type TComment = {
@@ -14,8 +14,8 @@ export type TComment = {
     userId: string,
     videoId: string,
     content: string,
-    createdAT: Date,
-    updatedAT: Date
+    createdAt: Date,
+    updatedAt: Date
 }
 
 type Props = {
@@ -106,6 +106,7 @@ const UpdateButton = DeleteButton
 //#endregion
 
 const Comment = ({ comment }: Props) => {
+
     //#region : declarations
     const dispatch = useDispatch()
     const user = useSelector(getCurrentUser).details
@@ -125,8 +126,6 @@ const Comment = ({ comment }: Props) => {
                 const res = await api.get<TPayload<TChannelUser>>(`/users/${comment.userId}`)
                 if (res.statusText === "OK") {
                     setCommentor(res.data.payload)
-                } else {
-                    console.log("fetch commentor failed");
                 }
             })()
         }
@@ -135,7 +134,6 @@ const Comment = ({ comment }: Props) => {
             setCommentor(undefined)
         }
     }, [comment])
-
 
     //#endregion
 
@@ -151,7 +149,11 @@ const Comment = ({ comment }: Props) => {
     // update comment
     const handleUpdateComment = async () => {
         // update functionality
-        setIsEditing(prev => !prev)
+        const res = await api.put<TPayload<TComment>>(`/comments/${comment._id}`, { content })
+        if (res.statusText === "OK") {
+            dispatch(updateComment(res.data.payload))
+            setIsEditing(prev => !prev)
+        }
     }
     //#endregion
 
@@ -166,14 +168,15 @@ const Comment = ({ comment }: Props) => {
                             {commentor?.username}
                         </Name>
                         <Time>
-                            {comment && format(comment.createdAT)}
+                            {
+                                comment && format(comment.updatedAt)
+                            }
                         </Time>
                     </NameAndTime>
                     {/* edit input box || comment content */}
                     {
                         isEditing ? (
                             <Input value={content} onChange={(e) => setContent(e.target.value)} placeholder='edit comment here...'>
-
                             </Input>
                         ) : (
                             <Message>
@@ -208,4 +211,4 @@ const Comment = ({ comment }: Props) => {
     )
 }
 
-export default Comment
+export default React.memo(Comment)

@@ -103,9 +103,9 @@ const Comments = ({ }: Props) => {
                 <button type="submit" onClick={handleNewComment}>Comment</button>
             </NewComment>
             {
-                comments.map(comment => (
-                    <Comment key={comment._id} comment={comment} />
-                ))
+                comments.map(comment => {
+                    return <Comment key={comment._id} comment={comment} />
+                })
             }
 
         </CommentsContainer>

@@ -58,7 +58,6 @@ const Home = ({ type }: Props) => {
     const fetchHomePageVideos = async (type: EHomeType) => {
       const res: AxiosResponse<TPayload<TVideos[]>> = await api.get(`/videos/${type}`);
       if (res.statusText === "OK") {
-        console.log("res status ok");
         setVideos(res.data.payload)
       }
     }

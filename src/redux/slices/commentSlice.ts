@@ -26,12 +26,21 @@ const commentsSlice = createSlice({
         },
         deleteComment: (state, action: TAction<{id: string}>)=>{
             state.list = state.list.filter(item=>item._id!==action.payload.id)
+        },
+        updateComment: (state, action: TAction<TComment>)=>{
+            state.list = state.list.map(comment => {
+                if (comment._id===action.payload._id){
+                    return action.payload
+                }                    
+                    return comment
+
+            })
         }
     }
 })
 
 // actions
-export const {setComments, removeComments, addComment, deleteComment} = commentsSlice.actions
+export const {setComments, removeComments, addComment, updateComment, deleteComment} = commentsSlice.actions
 
 // selectors
 export const getComments = (state:rootState)=>state.comments.list

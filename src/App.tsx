@@ -56,9 +56,7 @@ const App = (props: Props) => {
   const [mode, setMode] = useState<EMode>(EMode.dark)
 
   // side-effects
-  useEffect(() => {
-    console.log(isModalOpen);
-  }, [isModalOpen])
+
 
   // actual rendering
   return (

@@ -28,7 +28,7 @@ const Recommendations = (props: Props) => {
     //#region : side-effects
     // get recommended vids
     useEffect(() => {
-        (
+        currVideo && (
             async () => {
                 if (!(currVideo.tags.length > 0)) {
                     return

@@ -119,7 +119,6 @@ margin-bottom: 10px;
 
 // React functional component
 const Video = (props: Props) => {
-  console.log("videos page");
 
   // declarations
   const user = useSelector(getCurrentUser)
@@ -163,7 +162,6 @@ const Video = (props: Props) => {
   //#region : side-effects
   // fetch video and channel
   useEffect(() => {
-    console.log("effect ran");
 
     const fetchData = async () => {
       const videoRes = await api.get<TPayload<TVideos>>(`/videos/${location.pathname.split("/")[2]}`)
