@@ -22,7 +22,7 @@ const commentsSlice = createSlice({
             state.list=[]
         },
         addComment: (state, action: TAction<TComment>)=>{
-            state.list.push(action.payload)
+            state.list.unshift(action.payload)
         },
         deleteComment: (state, action: TAction<{id: string}>)=>{
             state.list = state.list.filter(item=>item._id!==action.payload.id)

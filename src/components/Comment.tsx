@@ -51,13 +51,16 @@ const LeftSide = styled.div`
 
 const RightSide = styled.div`
     display: flex;
+    gap: 10px;
 `
 
 const DeleteButton = styled.button`
-    background-color: #333;
+    background-color: ${({ theme }) => theme.soft};
     padding: 0.5em 1em;
     border-radius: 0.25em;
     color: ${({ theme }) => theme.text};
+    border: none;
+    box-shadow: 3px 3px 5px 0 rgba(0,0,0,0.3);
 `
 
 const Image = styled.img`
@@ -99,6 +102,7 @@ font-size: 14px;
 `
 
 const EditButton = DeleteButton
+const UpdateButton = DeleteButton
 //#endregion
 
 const Comment = ({ comment }: Props) => {
@@ -143,6 +147,12 @@ const Comment = ({ comment }: Props) => {
             dispatch(deleteCommentReducer({ id: comment._id }))
         }
     }
+
+    // update comment
+    const handleUpdateComment = async () => {
+        // update functionality
+        setIsEditing(prev => !prev)
+    }
     //#endregion
 
     //jsx rendering
@@ -177,9 +187,17 @@ const Comment = ({ comment }: Props) => {
             {
                 user && comment.userId === user._id && (
                     <RightSide>
-                        <EditButton onClick={() => setIsEditing(prev => !prev)} >
-                            Edit
-                        </EditButton>
+                        {
+                            isEditing ? (
+                                <UpdateButton onClick={handleUpdateComment}>
+                                    update
+                                </UpdateButton>
+                            ) : (
+                                <EditButton onClick={() => setIsEditing(prev => !prev)} >
+                                    Edit
+                                </EditButton>
+                            )
+                        }
                         <DeleteButton onClick={handleDeleteComment}>
                             delete
                         </DeleteButton>

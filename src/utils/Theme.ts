@@ -15,3 +15,12 @@ export const darkTheme = {
     // soft:"#555",
     hrSize: "0.1px",
   }
+
+  export type TTheme = {
+    bg: string,
+    bgLighter:string,
+    text:string,
+    textSoft:string,
+    soft:string,
+    hrSize: string,
+  }

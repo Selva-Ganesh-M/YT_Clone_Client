@@ -119,6 +119,8 @@ margin-bottom: 10px;
 
 // React functional component
 const Video = (props: Props) => {
+  console.log("videos page");
+
   // declarations
   const user = useSelector(getCurrentUser)
   const dispatch = useDispatch()
@@ -161,6 +163,8 @@ const Video = (props: Props) => {
   //#region : side-effects
   // fetch video and channel
   useEffect(() => {
+    console.log("effect ran");
+
     const fetchData = async () => {
       const videoRes = await api.get<TPayload<TVideos>>(`/videos/${location.pathname.split("/")[2]}`)
       const channelRes = await api.get<TPayload<TChannelUser>>(`/users/${videoRes.data.payload.userId}`)
@@ -168,9 +172,7 @@ const Video = (props: Props) => {
       // dispatchs
       dispatch(fetchVideoSuccess(videoRes.data.payload))
       setCurrentChannel(channelRes.data.payload)
-      console.log("set current channel ran.");
-      console.log("channelRes.payload", channelRes.data);
-      console.log("currentChannel:", currentChannel);
+
     }
     fetchData()
   }, [location])
@@ -178,14 +180,12 @@ const Video = (props: Props) => {
   // view increase
   useEffect(() => {
     (async () => {
-      console.log("working on view video");
-
       const res = await api.post(`/videos/view/${currentVideo._id}`)
       if (res.statusText === "OK") {
         dispatch(viewVideo)
       }
     })()
-  }, [])
+  }, [location, handleSubs])
 
   //#endregion
 
@@ -200,7 +200,7 @@ const Video = (props: Props) => {
           <iframe
             width="100%"
             height="500px"
-            src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
+            src={currentVideo.videoUrl}
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -269,7 +269,7 @@ const Video = (props: Props) => {
           <ChannelDetails>
             <ChannelTitle>{currentChannel?.username}</ChannelTitle>
             <Subscribers>
-              {currentChannel?.subscribers}
+              {currentChannel?.subscribers} subscribers
             </Subscribers>
             <Description>{currentVideo.desc}</Description>
           </ChannelDetails>

@@ -26,7 +26,7 @@ import { getCurrentUser } from '../redux/slices/userSlice';
 // styled components
 const MenuContainer = styled.div`
     height: 100vh;
-    flex:1.5;
+    flex:1;
     background-color: ${({ theme }) => theme.bgLighter};
     color: ${({ theme }) => theme.text};
     position:sticky;

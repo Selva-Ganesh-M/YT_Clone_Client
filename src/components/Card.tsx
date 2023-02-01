@@ -1,12 +1,12 @@
 import styled from 'styled-components'
-import { LogoImg } from './Menu'
 import { Link } from "react-router-dom"
 import { TPayload, TVideos } from '../pages/HomePage'
 import { useEffect, useState } from 'react'
 import { api } from '../api/api'
 import { format } from 'timeago.js'
 import { useDispatch } from 'react-redux'
-import { viewVideo } from '../redux/slices/videoSlice'
+
+//#region : styled components
 
 const CardContainer = styled.div<Props>`
     width: ${({ row }) => !row && "290px"};
@@ -17,6 +17,9 @@ const CardContainer = styled.div<Props>`
     display: ${({ row }) => row && "flex"};
     gap: ${({ row }) => row && "10px"};
     align-items: ${({ row }) => row && "start"};
+    &:hover {
+        transform: scale(1.05)
+    }
 `
 
 const Image = styled.img<Props>`
@@ -63,6 +66,8 @@ font-size: 14px;
 color: ${({ theme }) => theme.textSoft};
 `
 
+//#endregion
+
 export type TChannelUser = {
     _id: string,
     username: string,
@@ -92,28 +97,33 @@ const Card = ({ row, video }: Props) => {
     // side-effects
     // fetch user
     useEffect(() => {
-        const getUser = async () => {
+        (async () => {
             const response = await api.get<TPayload<TChannelUser>>(`/users/${video.userId}`)
             if (response.statusText === "OK") {
                 setChannelUser(response.data.payload);
             }
-        }
+        })()
     }, [])
 
     // actual response
     return (
         <Link to={`/video/${video._id}`} style={{ textDecoration: "none" }}>
             <CardContainer row={row} video={video} >
-                <Image row={row} video={video} src={video.videoUrl} />
+                <Image row={row} video={video} src={video.imgUrl} />
                 <Details row={row} video={video} >
-                    <ChannelImage row={row} video={video} src={video.imgUrl} />
+                    <ChannelImage
+                        row={row}
+                        video={video}
+                        src={channelUser?.image}
+                        alt={"hello"}
+                    />
                     <Content>
                         <Title>{video.title.length > 40 ? `${video.title}`.substring(0, 40) + "..." : `${video.title}`}</Title>
                         <ChannelName>
                             {channelUser && channelUser.username}
                         </ChannelName>
                         <Info>
-                            {video.views} - {format(video.createdAt)}
+                            {video.views} views - {format(video.createdAt)}
                         </Info>
                     </Content>
                 </Details>

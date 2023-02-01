@@ -39,6 +39,7 @@ export type TVideos = {
   dislikes: Array<string>,
   createdAt: Date,
   updatedAt: Date,
+  tags: string[],
 }
 
 export type TPayload<T> = {

@@ -64,7 +64,6 @@ const Comments = ({ }: Props) => {
     // fetch comments
     useEffect(() => {
         (async () => {
-            console.log("fetching comments");
 
             const res = await api.get<TPayload<TComment[]>>(`/comments/${currentVideo._id}`)
             if (res.statusText === "OK") {

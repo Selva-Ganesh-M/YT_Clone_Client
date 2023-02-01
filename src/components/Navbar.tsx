@@ -1,15 +1,19 @@
 import styled from "styled-components";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"
 import { getCurrentUser } from "../redux/slices/userSlice";
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 import { signOut } from "../redux/slices/userSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { setModal } from "../redux/slices/modalSlice";
+import { api } from "../api/api";
+import { fetchVideoSuccess } from "../redux/slices/videoSlice";
+import { TPayload, TVideos } from "../pages/HomePage";
 
 
-// React styled components
+//#region  React styled components
 const NavbarContainer = styled.div`
 padding: 0 10px;
 position: sticky;
@@ -83,6 +87,14 @@ background-color: inherit;
 font-weight: 500;
 `
 
+const UploadModal = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+`
+
+//#endregion
 
 
 // React functional component
@@ -92,6 +104,10 @@ const Navbar = (props: Props) => {
     // delcaration
     const user = useSelector(getCurrentUser)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    // custom declarations
+    const [search, setSearch] = useState<string>("")
 
     // functions
     const handleSignOut = () => {
@@ -99,6 +115,7 @@ const Navbar = (props: Props) => {
     }
 
     // side-effects 
+    // const fetchSearchedVids = 
 
     // actual rendering
     return (
@@ -106,13 +123,16 @@ const Navbar = (props: Props) => {
             <Wrapper>
                 <div></div>
                 <Search>
-                    <Input />
-                    <SearchOutlinedIcon style={{ cursor: "pointer" }} />
+                    <Input value={search} onChange={(e) => setSearch(e.target.value)} />
+                    <SearchOutlinedIcon style={{ cursor: "pointer" }} onClick={() => {
+                        setSearch("")
+                        navigate(`/search?src=${search}`)
+                    }} />
                 </Search>
                 {
                     user.details ? (
                         <User>
-                            <VideoCallOutlinedIcon />
+                            <VideoCallOutlinedIcon onClick={() => dispatch(setModal())} />
                             <Avatar referrerPolicy="no-referrer" src={user.details.image} />
                             <SignOut onClick={handleSignOut}>
                                 {user.details.username}
