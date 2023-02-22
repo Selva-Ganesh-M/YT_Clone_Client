@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import YTLogo from "../assets/logo.png"
 export const LogoImg = YTLogo
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 // Icon Imports
 import HomeIcon from "@mui/icons-material/Home";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
@@ -111,6 +111,7 @@ type Props = {
 const Menu = ({ setMode, mode }: Props) => {
   // declarations
   const user = useSelector(getCurrentUser)
+  const navigate = useNavigate()
 
   // jsx rendering
   return (
@@ -136,11 +137,11 @@ const Menu = ({ setMode, mode }: Props) => {
           <SettingsBrightnessOutlinedIcon />
           {mode === EMode.dark ? "Light Mode" : "Dark Mode"}
         </Item>
-        <Item>
+        <Item onClick={() => navigate("/")} >
           <HomeIcon />
           Home
         </Item>
-        <Item>
+        <Item onClick={() => navigate("/")}  >
           <ExploreOutlinedIcon />
           Explore
         </Item>
@@ -152,11 +153,11 @@ const Menu = ({ setMode, mode }: Props) => {
           </Item>
         </Link>
         <Hr />
-        <Item>
+        <Item style={{ color: "#999" }}>
           <VideoLibraryOutlinedIcon />
           Library
         </Item>
-        <Item>
+        <Item style={{ color: "#999" }}>
           <HistoryOutlinedIcon />
           History
         </Item>
@@ -181,41 +182,41 @@ const Menu = ({ setMode, mode }: Props) => {
         <Title>
           Best Of YT Clone
         </Title>
-        <Item>
+        <Item style={{ color: "#999" }} >
           <LibraryMusicOutlinedIcon />
           Music
         </Item>
-        <Item>
+        <Item style={{ color: "#999" }}>
           <SportsBasketballOutlinedIcon />
           Sports
         </Item>
-        <Item>
+        <Item style={{ color: "#999" }}>
           <SportsEsportsOutlinedIcon />
           Gaming
         </Item>
-        <Item>
+        <Item style={{ color: "#999" }}>
           <MovieOutlinedIcon />
           Movies
         </Item>
-        <Item>
+        <Item style={{ color: "#999" }}>
           <ArticleOutlinedIcon />
           News
         </Item>
-        <Item>
+        <Item style={{ color: "#999" }}>
           <LiveTvOutlinedIcon />
           Live
         </Item>
         <Hr />
 
-        <Item>
+        <Item style={{ color: "#999" }}>
           <SettingsOutlinedIcon />
           Settings
         </Item>
-        <Item>
+        <Item style={{ color: "#999" }}>
           <FlagOutlinedIcon />
           Report
         </Item>
-        <Item>
+        <Item style={{ color: "#999" }}>
           <HelpOutlineOutlinedIcon />
           Help
         </Item>

@@ -161,7 +161,7 @@ const SignIn = () => {
         <Input placeholder="username" value={username} onChange={e => setUsername(e.target.value)} />
         <Input placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Input type="password" placeholder="password" value={password} onChange={e => setPassword(e.target.value)} />
-        <Button>Sign up</Button>
+        <Button onClick={handleSignUp} >Sign up</Button>
       </Wrapper>
       <More>
         English(USA)

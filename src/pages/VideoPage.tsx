@@ -171,6 +171,10 @@ const Video = (props: Props) => {
       dispatch(fetchVideoSuccess(videoRes.data.payload))
       setCurrentChannel(channelRes.data.payload)
 
+      console.log(videoRes);
+      console.log(channelRes);
+
+
     }
     fetchData()
   }, [location])
@@ -190,112 +194,120 @@ const Video = (props: Props) => {
 
   // jsx rendering
   return (
-    <VideoContainer>
-      {/* video section + recommendations */}
-      <Content>
-        {/* video wrapper */}
-        <VideoWrapper>
-          <iframe
-            width="100%"
-            height="500px"
-            src={currentVideo.videoUrl}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </VideoWrapper>
-        <Title>{currentVideo.title}</Title>
-        {/* Video Details */}
-        <Details>
-          <Info>{currentVideo.views} views • {currentVideo ? format(currentVideo.createdAt) : null}</Info>
-          {/* conditional routing acc to user presence */}
-          {user.details ? (
-            <Buttons>
-              {/* like btn */}
-              <Button onClick={handleLike}>
-                {/* if user have conditions */}
-                {/* if no user just show the subscribe button and redirect user to signup page */}
-                {currentVideo.likes.includes(user.details!._id) ? (
-                  <ThumbUpIcon />
-                ) : (
-                  <ThumbUpOutlinedIcon />
-                )} {currentVideo?.likes.length}
-              </Button>
+    <>
+      {
+        // if video is ready
+        currentChannel && currentVideo && (
+          <VideoContainer>
+            {/* video section + recommendations */}
+            <Content>
+              {/* video wrapper */}
+              <VideoWrapper>
+                <iframe
+                  width="100%"
+                  height="500px"
+                  src={currentVideo.videoUrl}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </VideoWrapper>
+              <Title>{currentVideo.title}</Title>
 
-              {/* dislike btn */}
-              <Button onClick={handleDislike}>
-                {currentVideo.dislikes.includes(user.details!._id) ? (
-                  <ThumbDownIcon />
+              {/* Video Details */}
+              <Details>
+                <Info>{currentVideo.views} views • {currentVideo ? format(currentVideo.createdAt) : null}</Info>
+                {/* conditional routing acc to user presence */}
+                {user.details ? (
+                  <Buttons>
+                    {/* like btn */}
+                    <Button onClick={handleLike}>
+                      {/* if user have conditions */}
+                      {/* if no user just show the subscribe button and redirect user to signup page */}
+                      {currentVideo.likes.includes(user.details!._id) ? (
+                        <ThumbUpIcon />
+                      ) : (
+                        <ThumbUpOutlinedIcon />
+                      )} {currentVideo?.likes.length}
+                    </Button>
+
+                    {/* dislike btn */}
+                    <Button onClick={handleDislike}>
+                      {currentVideo.dislikes.includes(user.details!._id) ? (
+                        <ThumbDownIcon />
+                      ) : (
+                        <ThumbDownOffAltOutlinedIcon />
+                      )}
+                    </Button>
+                    <Button>
+                      <ReplyOutlinedIcon /> Share
+                    </Button>
+                    <Button>
+                      <AddTaskOutlinedIcon /> Save
+                    </Button>
+                  </Buttons>
                 ) : (
-                  <ThumbDownOffAltOutlinedIcon />
+                  <Buttons onClick={() => navigate("/signin")}>
+                    {/* like btn */}
+                    <Button>
+                      <ThumbUpOutlinedIcon />
+                    </Button>
+
+                    {/* dislike btn */}
+                    <Button>
+                      <ThumbDownOffAltOutlinedIcon />
+                    </Button>
+                    <Button>
+                      <ReplyOutlinedIcon /> Share
+                    </Button>
+                    <Button>
+                      <AddTaskOutlinedIcon /> Save
+                    </Button>
+                  </Buttons>
                 )}
-              </Button>
-              <Button>
-                <ReplyOutlinedIcon /> Share
-              </Button>
-              <Button>
-                <AddTaskOutlinedIcon /> Save
-              </Button>
-            </Buttons>
-          ) : (
-            <Buttons onClick={() => navigate("/signin")}>
-              {/* like btn */}
-              <Button>
-                <ThumbUpOutlinedIcon />
-              </Button>
 
-              {/* dislike btn */}
-              <Button>
-                <ThumbDownOffAltOutlinedIcon />
-              </Button>
-              <Button>
-                <ReplyOutlinedIcon /> Share
-              </Button>
-              <Button>
-                <AddTaskOutlinedIcon /> Save
-              </Button>
-            </Buttons>
-          )}
+              </Details>
+              <Hr />
 
-        </Details>
-        <Hr />
-
-        {/* Channel Banner */}
-        <ChannelBanner>
-          <ChannelImage src={currentChannel?.image} alt="missing imagee" />
-          <ChannelDetails>
-            <ChannelTitle>{currentChannel?.username}</ChannelTitle>
-            <Subscribers>
-              {currentChannel?.subscribers} subscribers
-            </Subscribers>
-            <Description>{currentVideo.desc}</Description>
-          </ChannelDetails>
-          {/* subs btn */}
-          {
-            // conditional rendering acc to user presence
-            !user.details ? (
-              <SubscribeButton isSubscribed={false} onClick={() => navigate('/signin')}>
-                Subscribe
-              </SubscribeButton>
-            ) : (
-              <SubscribeButton isSubscribed={user.details?.subscribedUsers.includes(currentChannel?._id!)} onClick={handleSubs}>
+              {/* Channel Banner */}
+              <ChannelBanner>
+                <ChannelImage src={currentChannel?.image} alt="missing imagee" />
+                <ChannelDetails>
+                  <ChannelTitle>{currentChannel?.username}</ChannelTitle>
+                  <Subscribers>
+                    {currentChannel?.subscribers} subscribers
+                  </Subscribers>
+                  <Description>{currentVideo.desc}</Description>
+                </ChannelDetails>
+                {/* subs btn */}
                 {
-                  user.details?.subscribedUsers.includes(currentChannel?._id!) ? (
-                    "Subscribed"
+                  // conditional rendering acc to user presence
+                  !user.details ? (
+                    <SubscribeButton isSubscribed={false} onClick={() => navigate('/signin')}>
+                      Subscribe
+                    </SubscribeButton>
                   ) : (
-                    "Subscribe"
+                    <SubscribeButton isSubscribed={user.details?.subscribedUsers.includes(currentChannel?._id!)} onClick={handleSubs}>
+                      {
+                        user.details?.subscribedUsers.includes(currentChannel?._id!) ? (
+                          "Subscribed"
+                        ) : (
+                          "Subscribe"
+                        )
+                      }
+                    </SubscribeButton>
                   )
                 }
-              </SubscribeButton>
-            )
-          }
-        </ChannelBanner>
-        <Hr />
-        <Comments />
-      </Content>
-      <Recommendations />
-    </VideoContainer>
+              </ChannelBanner>
+              <Hr />
+              <Comments />
+            </Content>
+            <Recommendations />
+          </VideoContainer>
+        )
+      }
+    </>
   )
 }
 
